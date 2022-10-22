@@ -1,8 +1,14 @@
+#include "app_options.h"
+
 #include <gtk/gtk.h>
+
+static struct software_app software_app_list_s;
 
 static void print_hello (GtkWidget *widget, gpointer data)
 {
   g_print ("YOU CLICKED ME! AAAAAAAAAAAAHHHHHHHHHHHHHHHHH\n");
+  memcpy(software_app_list_s.name, software_app_list[0], MAX_APP_OPTION_NAME_LEN);
+  app_options_get_list(&software_app_list_s);
 }
 
 static void activate (GtkApplication *app, gpointer user_data)
@@ -26,7 +32,8 @@ int main (int argc, char **argv)
 {
   GtkApplication *app;
   int status;
-
+  app_options_init();
+  
   app = gtk_application_new (NULL, G_APPLICATION_FLAGS_NONE);
   g_signal_connect (app, "activate", G_CALLBACK (activate), NULL);
   status = g_application_run (G_APPLICATION (app), argc, argv);

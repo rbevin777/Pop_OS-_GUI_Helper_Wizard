@@ -9,6 +9,8 @@
                 "-g",
                 "`pkg-config --cflags gtk4`",
                 "${file}",
+                // "${workspaceFolder}/Src/app_options.h",
+                // "${workspaceFolder}/Src/app_options.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "`pkg-config --libs gtk4`"
