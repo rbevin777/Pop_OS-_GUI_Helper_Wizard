@@ -31,6 +31,15 @@ SOFTWARE.
 /* Let's Init our private variables and definitions up here */
 static bool module_init_s = false;
 
+// Let's curate a basic app list for now in this 2D array. 
+// These can be moved into their own 2D char arrays when more are added.
+static char software_app_list[][MAX_APP_OPTION_NAME_LEN] = {
+    "steam",
+    "obs-studio",
+    "discord",
+    "vlc",
+    "audacity"
+};
 /* Let's have our private functions for this file up here too */
 
 /* Let's add our public functions in this section */

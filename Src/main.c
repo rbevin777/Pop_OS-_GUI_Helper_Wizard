@@ -7,7 +7,8 @@ static struct software_app software_app_list_s;
 static void print_hello (GtkWidget *widget, gpointer data)
 {
   g_print ("YOU CLICKED ME! AAAAAAAAAAAAHHHHHHHHHHHHHHHHH\n");
-  memcpy(software_app_list_s.name, software_app_list[0], MAX_APP_OPTION_NAME_LEN);
+  char array[] = {"Steam & Discord"};
+  memcpy(software_app_list_s.name, array, 16);
   app_options_get_list(&software_app_list_s);
 }
 

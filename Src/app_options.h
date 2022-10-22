@@ -35,16 +35,6 @@ SOFTWARE.
 /* Let's have any public variables or definitions here */
 #define MAX_APP_OPTION_NAME_LEN 100
 
-// Let's curate a basic app list for now in this 2D array. 
-// These can be moved into their own 2D char arrays when more are added.
-char software_app_list[][MAX_APP_OPTION_NAME_LEN] = {
-    "steam",
-    "obs-studio",
-    "discord",
-    "vlc",
-    "audacity"
-};
-
 // We can use this struct to tell us what software is selected to be installed/if it already is installed.
 struct software_app
 {
