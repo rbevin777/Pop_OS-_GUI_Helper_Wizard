@@ -7,9 +7,11 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
+                "`pkg-config --cflags gtk4`",
                 "${file}",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "`pkg-config --libs gtk4`"
             ],
             "options": {
                 "cwd": "${fileDirname}"
