@@ -26,13 +26,6 @@ static void print_hello(GtkWidget *widget, gpointer data)
 
 }
 
-// static void toggle_button(GtkWidget *widget, gpointer data)
-// {
-//   char array[] = {"Steam & Discord"};
-//   memcpy(software_app_list_s.name, array, 16);
-//   app_options_get_list(&software_app_list_s);
-// }
-
 static void activate(GtkApplication *app, gpointer user_data)
 {
   GtkWidget *window;
@@ -76,11 +69,6 @@ static void activate(GtkApplication *app, gpointer user_data)
 
   gtk_widget_show(window);
 }
-
-// static void output_state(GtkToggleButton *source, gpointer user_data)
-// {
-//   printf("Active: %d\n", gtk_toggle_button_get_active(source));
-// }
 
 int main(int argc, char **argv)
 {

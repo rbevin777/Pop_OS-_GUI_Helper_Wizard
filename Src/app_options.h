@@ -33,7 +33,7 @@ SOFTWARE.
 #include <stdint.h>
 #include <stdlib.h>
 
-/* Let's have any public variables or definitions here */
+/************ Let's have any public variables or definitions here ************/
 #define MAX_APP_OPTION_NAME_LEN 100
 #define APPS_LIST_LEN 6u
 
@@ -47,7 +47,7 @@ struct software_app
 
 extern struct software_app software_app_list_g[APPS_LIST_LEN];
 
-/* Then let's put our function definitions here */
+/************ Then let's put our function definitions here ************/
 void app_options_init(void);
 bool app_options_get_list(struct software_app app_list[], uint16_t n);
 
