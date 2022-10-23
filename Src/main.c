@@ -33,11 +33,20 @@ SOFTWARE.
 #include <gtk/gtk.h>
 
 /************ Let's Init our private variables and definitions up here ************/
+// We can use this struct to create multiple check button widgets and store their info
+struct check_button_info
+{
+  GtkWidget *check_button_widg;
+  char button_name[MAX_APP_OPTION_NAME_LEN];
+  bool active;
+};
 
 /************ Let's have our private function prototypes for this file up here too ************/
 static void print_hello(void);
 static void set_up_window(GtkApplication *app);
-static void set_up_checkbox_widget(GtkWidget *vbox, GtkSizeGroup *size_group, char *name_of_app, bool installed);
+static void set_up_checkbox_widget(GtkWidget *vbox, GtkSizeGroup *size_group, struct check_button_info *check_button, char *name_of_app, bool installed);
+static void set_up_button_widget(GtkWidget *vbox, char *name, void (*button_clicked));
+static void install_programs(void);
 
 /************ Let's add our public functions in this section ************/
 
@@ -68,18 +77,17 @@ static void print_hello(void)
 {
   // g_print("YOU CLICKED ME! AAAAAAAAAAAAHHHHHHHHHHHHHHHHH\n");
   app_options_get_list(&software_app_list_g, APPS_LIST_LEN);
-  for(uint16_t i = 0; i < APPS_LIST_LEN; i++)
+  for (uint16_t i = 0; i < APPS_LIST_LEN; i++)
   {
-      if(software_app_list_g[i].installed)
-      {
-        printf("APP: %s Is Installed\n", software_app_list_g[i].name);
-      }
-      else
-      {
-        printf("APP: %s Is NOT Installed\n", software_app_list_g[i].name);
-      }
+    if (software_app_list_g[i].installed)
+    {
+      printf("APP: %s Is Installed\n", software_app_list_g[i].name);
+    }
+    else
+    {
+      printf("APP: %s Is NOT Installed\n", software_app_list_g[i].name);
+    }
   }
-
 }
 
 /*!
@@ -103,10 +111,19 @@ static void set_up_window(GtkApplication *app)
   GtkSizeGroup *size_group = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
   g_object_set_data_full(G_OBJECT(main_window), "size-group", size_group, g_object_unref);
 
-  for(uint16_t i = 0; i < APPS_LIST_LEN; i++)
+  //  gtk_check_button_get_active(); I'll need this function later
+  // Get a list of our installed apps first
+  app_options_get_list(&software_app_list_g, APPS_LIST_LEN);
+
+  static struct check_button_info check_button_info_s[APPS_LIST_LEN];
+  // Let's setup some check button widgets.
+  for (uint16_t i = 0; i < APPS_LIST_LEN; i++)
   {
-    set_up_checkbox_widget(vbox, size_group, software_app_list_g[i].name, software_app_list_g[i].installed);
+    set_up_checkbox_widget(vbox, size_group, check_button_info_s, software_app_list_g[i].name, software_app_list_g[i].installed);
   }
+
+  // Let's see if we can add an install button.
+  set_up_button_widget(vbox, "Install", install_programs);
 
   gtk_window_present(GTK_WINDOW(main_window));
 }
@@ -115,13 +132,38 @@ static void set_up_window(GtkApplication *app)
  *    \brief    This  function will create a signle checkbox widget based on a given input name and boolean.
  *    \param    vbox - Pointer to the container which will house each of these checkbox widgets.
  *    \param    size_group - Pointer to size_group which provides a mechanism for grouping a number of widgets together so they all request the same amount of space.
+ *    \param    check_button - Pointer to a struct containing a check button widget and button info.
  *    \param    name - Name of the checkbox.
  *    \param    installed - initial value when created, True/False.
  */
-static void set_up_checkbox_widget(GtkWidget *vbox, GtkSizeGroup *size_group, char *name, bool installed)
+static void set_up_checkbox_widget(GtkWidget *vbox, GtkSizeGroup *size_group, struct check_button_info *check_button, char *name, bool installed)
 {
-  GtkWidget *check_button = gtk_check_button_new_with_mnemonic(name);
-  gtk_box_append(GTK_BOX(vbox), check_button);
-  gtk_check_button_set_active(GTK_CHECK_BUTTON(check_button), installed);
-  g_signal_connect(check_button, "toggled", G_CALLBACK(print_hello), size_group);
+  // Set up a check button
+  check_button->check_button_widg = gtk_check_button_new_with_mnemonic(name);
+  gtk_box_append(GTK_BOX(vbox), check_button->check_button_widg);
+  gtk_check_button_set_active(GTK_CHECK_BUTTON(check_button->check_button_widg), installed);
+  g_signal_connect(check_button->check_button_widg, "toggled", G_CALLBACK(print_hello), size_group); // need to hook this up to allow us to populate checkbox setting info
+
+  // populate our check button widg with information about the app name and if it is installed or not.
+  memcpy(check_button->button_name, name, APPS_LIST_LEN);
+  check_button->active = installed;
+}
+
+/*!
+ *    \brief    This function will help us setup button widgets easier.
+ *    \param    vbox - Pointer to the container which will house each of these checkbox widgets.
+ */
+static void set_up_button_widget(GtkWidget *vbox, char *name, void (*button_clicked))
+{
+  GtkWidget *button = gtk_button_new_with_label(name);
+  g_signal_connect(button, "clicked", G_CALLBACK(button_clicked), NULL); // This will allow us to hook into a function.
+  gtk_box_append(GTK_BOX(vbox), button);
+}
+
+/*!
+ *    \brief    This function will eventually install our programs
+ */
+static void install_programs(void)
+{
+  print_hello();
 }
