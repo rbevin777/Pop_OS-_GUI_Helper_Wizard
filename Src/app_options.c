@@ -25,39 +25,56 @@ SOFTWARE.
 *********************************************************************************/
 #include "app_options.h"
 
-#include <stdio.h>
-#include <stdbool.h>
+// #include <stdio.h>
+// #include <stdbool.h>
+// #include <stdlib.h>
+// #include <string.h>
 
 /* Let's Init our private variables and definitions up here */
 static bool module_init_s = false;
 
-// Let's curate a basic app list for now in this 2D array. 
+// Let's curate a basic app list for now in this 2D array.
 // These can be moved into their own 2D char arrays when more are added.
-static char software_app_list[][MAX_APP_OPTION_NAME_LEN] = {
-    "steam",
-    "obs-studio",
-    "discord",
-    "vlc",
-    "audacity"
+extern struct software_app software_app_list_g[APPS_LIST_LEN] = {
+    {"steam", false},
+    {"obs-studio", false},
+    {"discord", false},
+    {"vlc", false},
+    {"audacity", false},
+    {"chromium-bsu", false}
 };
-/* Let's have our private functions for this file up here too */
+
+static char pre_defined_apps_list_s[][MAX_APP_OPTION_NAME_LEN] = 
+{
+    "Steam",
+    "OBS-Studio",
+    "Discord",
+    "VLC",
+    "Audacity"
+};
+/* Let's have our private function prototypes for this file up here too */
+static bool get_installed_apps_list(char *app_name);
 
 /* Let's add our public functions in this section */
 /*!
  *    \brief    Let's make sure we have everything cocked, locked and ready to rock
  *              before we start using the other functions in this file.
-*/
+ */
 void app_options_init(void)
 {
     module_init_s = true;
 }
 
-bool app_options_get_list(struct software_app app_list[])
+bool app_options_get_list(struct software_app app_list[], uint16_t n)
 {
     bool app_options_get_okay = false;
-    if(module_init_s)
-    {
-        printf("%s", app_list[0].name);
+    if (module_init_s)
+    {   
+        // We want to check if any of these apps are already installed.
+        for(uint16_t i = 0; i < n; i++)
+        {
+            app_list[i].installed = get_installed_apps_list(app_list[i].name);
+        }
     }
     else
     {
@@ -67,5 +84,19 @@ bool app_options_get_list(struct software_app app_list[])
 }
 
 
+/* Let's have our private functions for this file down here. */
 
-
+static bool get_installed_apps_list(char *app_name)
+{   
+    // init some variables
+    bool installed = false;
+    char which[MAX_APP_OPTION_NAME_LEN + 6] = "which ";
+    
+    // concatenate our app name with the "which" termianl command
+    strcat(which, app_name);
+    if(system(which) == 0)
+    {
+        installed = true;
+    }
+    return installed;
+}

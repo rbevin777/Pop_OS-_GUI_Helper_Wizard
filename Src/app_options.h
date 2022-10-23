@@ -30,11 +30,14 @@ SOFTWARE.
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-
+#include <stdint.h>
+#include <stdlib.h>
 
 /* Let's have any public variables or definitions here */
 #define MAX_APP_OPTION_NAME_LEN 100
+#define APPS_LIST_LEN 6u
 
+#define ARRAY_LEN(array) sizeof(array)/sizeof(array[0])
 // We can use this struct to tell us what software is selected to be installed/if it already is installed.
 struct software_app
 {
@@ -42,11 +45,10 @@ struct software_app
     bool installed;
 };
 
+extern struct software_app software_app_list_g[APPS_LIST_LEN];
+
 /* Then let's put our function definitions here */
 void app_options_init(void);
-bool app_options_get_list(struct software_app app_list[]);
-
-
-
+bool app_options_get_list(struct software_app app_list[], uint16_t n);
 
 #endif
