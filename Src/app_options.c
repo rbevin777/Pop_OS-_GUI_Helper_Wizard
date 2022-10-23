@@ -25,11 +25,6 @@ SOFTWARE.
 *********************************************************************************/
 #include "app_options.h"
 
-// #include <stdio.h>
-// #include <stdbool.h>
-// #include <stdlib.h>
-// #include <string.h>
-
 /************ Let's Init our private variables and definitions up here ************/
 
 #define WHICH_AND_SPACE_CHAR_LEN 6u //< Length of the characters in the word "which "
