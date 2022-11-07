@@ -52,9 +52,6 @@ static void install_programs(void);
 
 /*!
  *    \brief    This is our main where we will run our app.
- *    \param    argc - Not entireley sure what this is for. It's used by the GTK lib though
- *    \param    argv - Not entireley sure what this is for. It's used by the GTK lib though
- *    \return   status - status returned from the g_application_run function.
  */
 int main(int argc, char **argv)
 {
@@ -75,7 +72,6 @@ int main(int argc, char **argv)
  */
 static void print_hello(void)
 {
-  // g_print("YOU CLICKED ME! AAAAAAAAAAAAHHHHHHHHHHHHHHHHH\n");
   app_options_get_list(&software_app_list_g, APPS_LIST_LEN);
   for (uint16_t i = 0; i < APPS_LIST_LEN; i++)
   {
@@ -113,6 +109,7 @@ static void set_up_window(GtkApplication *app)
 
   //  gtk_check_button_get_active(); I'll need this function later
   // Get a list of our installed apps first
+  app_options_init();
   app_options_get_list(&software_app_list_g, APPS_LIST_LEN);
 
   static struct check_button_info check_button_info_s[APPS_LIST_LEN];
