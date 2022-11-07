@@ -170,6 +170,7 @@ static void install_programs(void)
   print_hello();
 }
 
+// MOVE THE WIDGET FUNCTIONALITY TO IT'S OWN MODULE???
 /*!
  *    \brief    This function helps us setup the notebook and it's correcsponding tabs/pages.
  *    \param    window - Pointer to the main window so that our notebook can be added to the main window.
