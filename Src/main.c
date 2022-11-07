@@ -45,8 +45,9 @@ struct check_button_info
 static void print_hello(void);
 static void set_up_window(GtkApplication *app);
 static void set_up_checkbox_widget(GtkWidget *vbox, GtkSizeGroup *size_group, struct check_button_info *check_button, char *name_of_app, bool installed);
-static void set_up_button_widget(GtkWidget *vbox, char *name, void (*button_clicked));
+static void set_up_button_widget(GtkWidget *vbox, char *name, void(*button_clicked));
 static void install_programs(void);
+static void set_up_our_notebook(GtkWidget *window, GtkWidget *vbox);
 
 /************ Let's add our public functions in this section ************/
 
@@ -55,9 +56,14 @@ static void install_programs(void);
  */
 int main(int argc, char **argv)
 {
+  // Create some initial variables first
   GtkApplication *app;
   int status;
 
+  // initialise our modules first
+  app_options_init();
+
+  // Then proceed to create the window
   app = gtk_application_new("org.gtk.example", G_APPLICATION_FLAGS_NONE);
   g_signal_connect(app, "activate", G_CALLBACK(set_up_window), NULL);
   status = g_application_run(G_APPLICATION(app), argc, argv);
@@ -97,30 +103,28 @@ static void set_up_window(GtkApplication *app)
   gtk_window_set_title(GTK_WINDOW(main_window), "Post Installation Wizard");
   gtk_window_set_default_size(GTK_WINDOW(main_window), 720, 480);
 
-  // Then let's set up a box within the window
-  GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, APPS_LIST_LEN);
-  gtk_widget_set_margin_start(vbox, APPS_LIST_LEN);
-  gtk_widget_set_margin_end(vbox, APPS_LIST_LEN);
-  gtk_widget_set_margin_top(vbox, APPS_LIST_LEN);
-  gtk_widget_set_margin_bottom(vbox, APPS_LIST_LEN);
-  gtk_window_set_child(GTK_WINDOW(main_window), vbox);
+  // This is used to setup the checkbox array later
   GtkSizeGroup *size_group = gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
   g_object_set_data_full(G_OBJECT(main_window), "size-group", size_group, g_object_unref);
 
-  //  gtk_check_button_get_active(); I'll need this function later
-  // Get a list of our installed apps first
-  app_options_init();
+  // gtk_check_button_get_active(); I'll need this function later
+
+  // Create our accessories page child box to contain our check buttons.
+  GtkWidget *accessories_child_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, APPS_LIST_LEN);
+
+  // Get a list of our installed apps
   app_options_get_list(&software_app_list_g, APPS_LIST_LEN);
 
   static struct check_button_info check_button_info_s[APPS_LIST_LEN];
   // Let's setup some check button widgets.
   for (uint16_t i = 0; i < APPS_LIST_LEN; i++)
   {
-    set_up_checkbox_widget(vbox, size_group, check_button_info_s, software_app_list_g[i].name, software_app_list_g[i].installed);
+    set_up_checkbox_widget(accessories_child_vbox, size_group, check_button_info_s, software_app_list_g[i].name, software_app_list_g[i].installed);
   }
 
   // Let's see if we can add an install button.
-  set_up_button_widget(vbox, "Install", install_programs);
+  set_up_button_widget(accessories_child_vbox, "Install", install_programs); //!< install button only appears in accessories child box.
+  set_up_our_notebook(main_window, accessories_child_vbox);
 
   gtk_window_present(GTK_WINDOW(main_window));
 }
@@ -150,7 +154,7 @@ static void set_up_checkbox_widget(GtkWidget *vbox, GtkSizeGroup *size_group, st
  *    \brief    This function will help us setup button widgets easier.
  *    \param    vbox - Pointer to the container which will house each of these checkbox widgets.
  */
-static void set_up_button_widget(GtkWidget *vbox, char *name, void (*button_clicked))
+static void set_up_button_widget(GtkWidget *vbox, char *name, void(*button_clicked))
 {
   GtkWidget *button = gtk_button_new_with_label(name);
   g_signal_connect(button, "clicked", G_CALLBACK(button_clicked), NULL); // This will allow us to hook into a function.
@@ -163,4 +167,43 @@ static void set_up_button_widget(GtkWidget *vbox, char *name, void (*button_clic
 static void install_programs(void)
 {
   print_hello();
+}
+
+/*!
+ *    \brief    This function helps us setup the notebook and it's correcsponding tabs/pages.
+ *    \param    window - Pointer to the main window so that our notebook can be added to the main window.
+ *    \param    vbox - Pointer to the container which will house each of these checkbox widgets.
+ */
+static void set_up_our_notebook(GtkWidget *window, GtkWidget *vbox)
+{
+  // Setup our notebook
+  GtkWidget *notebook = gtk_notebook_new();
+
+  // Setup the children for within the notebook tabs/pages
+  GtkWidget *auido_video_label = gtk_label_new("Aduio and Video Page");
+  GtkWidget *development_label = gtk_label_new("Development Page");
+  GtkWidget *gaming_page_label = gtk_label_new("Gaming Page");
+  GtkWidget *browser_page_label = gtk_label_new("Browser Page");
+  GtkWidget *tools_page_label = gtk_label_new("Tools Page");
+
+  // Set the notebook starting poistion
+  gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_TOP);
+
+  // tab labels for notebook
+  GtkWidget *accessories_page = gtk_label_new("Accessories");
+  GtkWidget *audio_video_page = gtk_label_new("Audio and Video");
+  GtkWidget *development_page = gtk_label_new("Development");
+  GtkWidget *gaming_page = gtk_label_new("Gaming");
+  GtkWidget *browser_page = gtk_label_new("Browsers");
+  GtkWidget *tools_page = gtk_label_new("Tools");
+
+  // add the pages/tabs to the notebook
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), vbox, accessories_page);
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), auido_video_label, audio_video_page);
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), development_label, development_page);
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), gaming_page_label, gaming_page);
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), browser_page_label, browser_page);
+
+  // make the notebook a child of the window
+  gtk_window_set_child(GTK_NOTEBOOK(window), notebook);
 }
