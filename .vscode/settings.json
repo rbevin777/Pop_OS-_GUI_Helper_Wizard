@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "app_options.h": "c",
+        "string.h": "c",
+        "array": "c",
+        "stdint.h": "c",
+        "stdbool.h": "c",
+        "stdlib.h": "c"
+    }
+}

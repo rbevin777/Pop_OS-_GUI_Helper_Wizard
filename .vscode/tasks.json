@@ -9,9 +9,12 @@
                 "-g",
                 "`pkg-config --cflags gtk4`",
                 "${file}",
+                "-Wall",
+                "-Wextra",
+                "${workspaceFolder}/Src/app_options.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
-                "`pkg-config --libs gtk4`"
+                "`pkg-config --libs gtk4`",
             ],
             "options": {
                 "cwd": "${fileDirname}"
