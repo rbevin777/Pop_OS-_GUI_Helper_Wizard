@@ -108,7 +108,7 @@ static void set_up_window(GtkApplication *app)
   g_object_set_data_full(G_OBJECT(main_window), "size-group", size_group, g_object_unref);
 
   // gtk_check_button_get_active(); I'll need this function later
-
+/* From here...*/
   // Create our accessories page child box to contain our check buttons.
   GtkWidget *accessories_child_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, APPS_LIST_LEN);
 
@@ -125,6 +125,7 @@ static void set_up_window(GtkApplication *app)
   // Let's see if we can add an install button.
   set_up_button_widget(accessories_child_vbox, "Install", install_programs); //!< install button only appears in accessories child box.
   set_up_our_notebook(main_window, accessories_child_vbox);
+/* To here... is specific to the accessory page. Need to tidy this up*/
 
   gtk_window_present(GTK_WINDOW(main_window));
 }
@@ -178,7 +179,7 @@ static void set_up_our_notebook(GtkWidget *window, GtkWidget *vbox)
 {
   // Setup our notebook
   GtkWidget *notebook = gtk_notebook_new();
-
+/* This can be dried up */
   // Setup the children for within the notebook tabs/pages
   GtkWidget *auido_video_label = gtk_label_new("Aduio and Video Page");
   GtkWidget *development_label = gtk_label_new("Development Page");
