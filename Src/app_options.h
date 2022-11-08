@@ -60,6 +60,7 @@ enum app_options_pages
     APP_OP_BROWSERS,
     APP_OP_TOOLS
 };
+
 /************ Then let's put our function definitions here ************/
 void app_options_init(void);
 bool app_options_get_list(struct software_app app_list[], uint16_t n);

@@ -143,7 +143,7 @@ uint8_t app_options_get_app_list_len(enum app_options_pages app_op_pages)
             break;
         default: 
             printf("NOT A VALID PAGE\n");
-            ASSERT(false);
+            assert(false);
     }
     return app_list_len;
 }
