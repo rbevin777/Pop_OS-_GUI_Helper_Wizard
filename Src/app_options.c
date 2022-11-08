@@ -24,12 +24,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 *********************************************************************************/
 #include "app_options.h"
+#include <assert.h>
 
 /************ Let's Init our private variables and definitions up here ************/
 
 #define WHICH_AND_SPACE_CHAR_LEN 6u //< Length of the characters in the word "which "
 
 static bool module_init_s = false;
+
 
 
 // Let's curate a basic app list for now in this 2D array.
@@ -43,6 +45,7 @@ extern struct software_app software_app_list_g[APPS_LIST_LEN] = {
     {"chromium-bsu", false}
 };
 
+
 static char pre_defined_apps_list_s[][MAX_APP_OPTION_NAME_LEN] = 
 {
     "Steam",
@@ -50,6 +53,25 @@ static char pre_defined_apps_list_s[][MAX_APP_OPTION_NAME_LEN] =
     "Discord",
     "VLC",
     "Audacity"
+};
+
+// Accessories Apps Names List
+static char *accessories_app_list_s[] = 
+{
+    "Gnome Disks",
+    "Emoji Picker",
+    "Telegram Desktop",
+    "Discord"
+};
+
+// Gaming Apps Names List
+static char *gaming_app_list_s[] = 
+{
+    "Steam",
+    "Wine",
+    "Wine Tricks",
+    "Proton Tricks",
+    "Lutris"
 };
 
 
@@ -91,7 +113,40 @@ bool app_options_get_list(struct software_app app_list[], uint16_t n)
     return app_check_ran;
 }
 
-
+/*!
+ *    \brief     Gets the length of our app options based on which app options we want to know the length of.
+ *    \param[in] app_op_pages - Enum of which app option page we want to get the length of
+ *    \retval    app_list_len - length of app options on the corresponding pages.
+ */
+uint8_t app_options_get_app_list_len(enum app_options_pages app_op_pages)
+{   
+    uint8_t app_list_len = 0;
+    switch(app_op_pages)
+    {
+        case APP_OP_ACCESSORIES:
+            app_list_len = (uint8_t)APP_OP_ARRAY_LEN(accessories_app_list_s);
+            break;
+        case APP_OP_AUDIO_AND_VIDEO: 
+            app_list_len = (uint8_t)APP_OP_ARRAY_LEN(accessories_app_list_s); // UPDATE WITH RELEVANT ARRAY
+            break;
+        case APP_OP_DEVELOPMENT: 
+            app_list_len = (uint8_t)APP_OP_ARRAY_LEN(accessories_app_list_s); // UPDATE WITH RELEVANT ARRAY
+            break;
+        case APP_OP_GAMING: 
+            app_list_len = (uint8_t)APP_OP_ARRAY_LEN(gaming_app_list_s);
+            break;
+        case APP_OP_BROWSERS: 
+            app_list_len = (uint8_t)APP_OP_ARRAY_LEN(accessories_app_list_s); // UPDATE WITH RELEVANT ARRAY
+            break;
+        case APP_OP_TOOLS: 
+            app_list_len = (uint8_t)APP_OP_ARRAY_LEN(accessories_app_list_s); // UPDATE WITH RELEVANT ARRAY
+            break;
+        default: 
+            printf("NOT A VALID PAGE\n");
+            ASSERT(false);
+    }
+    return app_list_len;
+}
 /************ Let's have our private functions for this file down here. ************/
 /*!
  *    \brief     Runs a check using the which keyword if an app is installed or not, based on a given input app name.

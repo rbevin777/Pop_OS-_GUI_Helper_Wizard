@@ -12,6 +12,7 @@
                 "-Wall",
                 "-Wextra",
                 "${workspaceFolder}/Src/app_options.c",
+                "${workspaceFolder}/Src/help_wiz_widgets.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "`pkg-config --libs gtk4`",
