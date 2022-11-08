@@ -6,6 +6,9 @@
         "array": "c",
         "stdint.h": "c",
         "stdbool.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "help_wiz_widgets.h": "c",
+        "functional": "c",
+        "assert.h": "c"
     }
 }
